@@ -1,0 +1,31 @@
+{
+  "name": "mcp-weather",
+  "version": "0.1.0",
+  "description": "MCP server to get the current weather in a city",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-weather": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "pack": "npm pack --pack-destination dist",
+    "start": "node dist/index.js",
+    "test": "node tests/test-server.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "author": "Erhhung Yuan",
+  "license": "MIT",
+  "dependencies": {
+    "@mcpkit-dev/core": "^2.4.0",
+    "axios": "^1.13.5",
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.15.11",
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}
