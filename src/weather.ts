@@ -46,21 +46,17 @@ export default class AsyncWeather {
   _host: string = "https://api.openweathermap.org" as const;
   _path: string = "/data/2.5/weather" as const;
   _format: string = "json" as const;
-  _city: string | undefined;
-  _cityId: number | undefined;
-  _zipCode: number | undefined;
-  _countryCode: string | undefined;
-  _coordinates: Coordinates | undefined;
+  _city?: string;
+  _cityId?: number;
+  _zipCode?: number;
+  _countryCode?: string;
+  _coordinates?: Coordinates;
   _language: string = "en";
   _units: Units = "imperial";
-  _data: WeatherData | undefined;
+  _data?: WeatherData;
 
-  set apiKey(apiKey: string) {
-    this._apiKey = apiKey;
-  }
-
-  get apiKey(): string {
-    return this._apiKey;
+  constructor(city?: string) {
+    this._city = city;
   }
 
   set city(city: string) {
@@ -79,19 +75,19 @@ export default class AsyncWeather {
     return this._cityId;
   }
 
-  setCoordinates(lat: number, long: number) {
-    this._coordinates = {
-      latitude: lat,
-      longitude: long,
-    };
-  }
-
   set coordinates(coordinates: Coordinates) {
     this._coordinates = coordinates;
   }
 
   get coordinates(): Coordinates | undefined {
     return this._coordinates;
+  }
+
+  setCoordinates(lat: number, long: number) {
+    this._coordinates = {
+      latitude: lat,
+      longitude: long,
+    };
   }
 
   setZipCodeAndCountryCode(zipCode: number, countryCode: string) {
@@ -109,6 +105,14 @@ export default class AsyncWeather {
       zipCode: this._zipCode,
       countryCode: this._countryCode,
     };
+  }
+
+  set apiKey(apiKey: string) {
+    this._apiKey = apiKey;
+  }
+
+  get apiKey(): string {
+    return this._apiKey;
   }
 
   set language(lang: string) {
@@ -142,9 +146,9 @@ export default class AsyncWeather {
     return data.main.humidity;
   }
 
-  async getTitle(): Promise<string> {
+  async getCondition(): Promise<string> {
     const data = await this.getWeatherData();
-    return data.weather[0].main;
+    return data.weather[0].main.toLowerCase();
   }
 
   async getDescription(): Promise<string> {

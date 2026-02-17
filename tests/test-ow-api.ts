@@ -1,13 +1,11 @@
-#!/usr/bin/env node
+#!/usr/bin/env ts-node
 
 import AsyncWeather from "../src/weather.ts";
-const weather = new AsyncWeather();
 
-async function testWeather(city) {
-  weather.city = city;
-
-  const condition = await weather.getTitle();
-  const temperature = Math.round(await weather.getTemperature());
+async function testWeather(city: string) {
+  const weather = new AsyncWeather(city);
+  const condition = await weather.getCondition();
+  const temperature = await weather.getTemperature();
   const humidity = await weather.getHumidity();
 
   const title = `Weather in ${city}`;
@@ -18,4 +16,5 @@ async function testWeather(city) {
   console.log(`   Humidity: ${humidity}%`);
 }
 
-await testWeather("San Francisco");
+const city = process.argv.slice(2).join(" ");
+await testWeather(city || "San Francisco");

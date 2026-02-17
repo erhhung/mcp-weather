@@ -9,19 +9,12 @@ import {
 } from "@mcpkit-dev/core";
 
 import AsyncWeather from "./weather.js";
-const weather = new AsyncWeather();
 
-/**
- * MCP server to get current weather for a city
- */
 @MCPServer({
   name: "weather",
   version: "0.1.0",
 })
 class WeatherServer {
-  /**
-   * Get weather information for a city
-   */
   @Tool({
     name: "weather",
     description: "Get weather information for a city",
@@ -29,11 +22,10 @@ class WeatherServer {
   async getWeather(
     @Param({ name: "city", description: "City name to get weather for" })
     city: string,
-  ): Promise<any> {
-    weather.city = city;
-
-    const condition = (await weather.getTitle()).toLowerCase();
-    const temperature = Math.round(await weather.getTemperature());
+  ) {
+    const weather = new AsyncWeather(city);
+    const condition = await weather.getCondition();
+    const temperature = await weather.getTemperature();
     const humidity = await weather.getHumidity();
 
     return `Weather in ${city} is ${condition}, ${temperature}°F, and ${humidity}% humidity`;
@@ -45,9 +37,6 @@ class WeatherServer {
     // };
   }
 
-  /**
-   * Get MCP server information
-   */
   @Resource({
     uri: "info://server",
     name: "Server Info",
@@ -65,9 +54,6 @@ class WeatherServer {
     );
   }
 
-  /**
-   * A helpful prompt template
-   */
   @Prompt({
     name: "help",
     description: "Get help using this server",
@@ -105,6 +91,5 @@ class WeatherServer {
   }
 }
 
-// Create and start the server
 const server = createServer(WeatherServer);
 await server.listen();
